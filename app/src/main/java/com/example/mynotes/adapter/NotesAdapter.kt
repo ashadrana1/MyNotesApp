@@ -22,17 +22,17 @@ class NotesAdapter(private val context: Context, val listener:NotesClickListener
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-    return NoteViewHolder(
-        LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
-    )
+        return NoteViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
+        )
     }
 
     override fun getItemCount(): Int {
-    return NotesList.size
+        return NotesList.size
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-    val currentNote = NotesList[position]
+        val currentNote = NotesList[position]
 
         holder.title.text = currentNote.title
         holder.title.isSelected = true
@@ -48,13 +48,14 @@ class NotesAdapter(private val context: Context, val listener:NotesClickListener
         holder.notes_layout.setOnClickListener{
             listener.onItemClicked(NotesList[holder.adapterPosition])
         }
-
-        holder.notes_layout.setOnClickListener {
-            listener.onLongItemClicked(NotesList[holder.adapterPosition],holder.notes_layout)
-            true
+        holder.notes_layout.setOnLongClickListener {
+            listener.onLongItemClicked(NotesList[holder.adapterPosition], holder.notes_layout)
+            true // Return true to indicate that the long click is consumed and no further actions should happen.
         }
+
+
     }
-//ab mai ooper ka onclickListener likhne ke baad yahan se hi continue krr rha huu
+    //ab mai ooper ka onclickListener likhne ke baad yahan se hi continue krr rha huu
     fun updateList(newList: List<Note>){
         //so whenever user adds a note/calls this method so we want create the fullList(line 21) and set this fullList
         //as our new List
@@ -65,7 +66,7 @@ class NotesAdapter(private val context: Context, val listener:NotesClickListener
         NotesList.clear()
         NotesList.addAll(fullList)
 
-    notifyDataSetChanged()
+        notifyDataSetChanged()
     }
 
     //jb userSearchbar mein kuch type krke dhoondne ki koshish krega
@@ -118,5 +119,7 @@ class NotesAdapter(private val context: Context, val listener:NotesClickListener
     interface NotesClickListener{
         fun onItemClicked(note: Note)
         fun onLongItemClicked(note: Note, cardView: CardView)
+
+        fun onDeleteMenuClicked(note: Note)
     }
 }
